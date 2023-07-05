@@ -1,15 +1,22 @@
 import express, { Application } from 'express';
+import cors from 'cors';
 import db from '../db/connection';
+import userRoutes from '../routes/users';
 
 class Server {
     private app: Application;
     private port: string | undefined;
+    private apiPaths = {
+        users: '/api/users',
+        projects: '/api/projects'
+    }
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
         this.dbConection();
         this.middlewares();
+        this.routes();
     }
 
     async dbConection() {
@@ -22,8 +29,20 @@ class Server {
     }
 
     middlewares() {
-        // Lectura y Parse del body
+        // Lectura y Parseo del body
         this.app.use(express.json());
+        // Permite peticiones desde cualquier dominio o servidor
+        this.app.use(cors());
+        // this.app.use(cors({
+        //     origin: 'http://localhost:5173/'
+        // }));
+
+        //Configurar la carpeta estatica
+        this.app.use('/uploads', express.static('uploads'))
+    }
+
+    routes() {
+        this.app.use(this.apiPaths.users, userRoutes);
     }
 
     listen() {
