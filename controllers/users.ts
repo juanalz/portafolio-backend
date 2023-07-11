@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
 import Role from '../models/role';
 import User from '../models/user';
 
@@ -57,6 +58,10 @@ export const saveUsers = async(req: Request, res: Response) => {
     const { body } = req;
     body.photo = req.file?.filename;
     body.idRol = 2;
+    //Encriptar la contraseña
+    const salt = bcrypt.genSaltSync();
+    body.password = bcrypt.hashSync(body.password, salt);
+
     const user = await User.create(body);
 
     res.status(200).json({
