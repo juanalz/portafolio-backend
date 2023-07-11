@@ -66,16 +66,20 @@ export const saveUsers = async(req: Request, res: Response) => {
 
 export const updateUser = async(req: Request, res: Response) => {
     // const _id = req.params.id;
-    const { id, names, email, age, state } = req.body;
+    // const { id, names, email, age } = req.body;
 
-    const user = await User.update({names, email, age, state}, {
+    const { body } = req;
+    body.photo = req.file?.filename;
+    body.idRol = 2;
+
+    const user = await User.update(body, {
         where: {
-            id
+            id: body.id
         }
     });
 
     res.status(200).json({
-        msg: `El Usuario con el ID: ${id} ha sido actualizado`
+        msg: `El Usuario con el ID: ${body.id} ha sido actualizado`
     })
 }
 
