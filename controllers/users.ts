@@ -51,7 +51,7 @@ export const consultUserByNames = async(req: Request, res: Response) => {
 }
 
 export const saveUsers = async(req: Request, res: Response) => {
-    // const { names, email, password, photo, age } = req.body;
+    const { names, email, password, photo, age } = req.body;
     // let idRol = 2;
     // const user = await User.create({names, email, password, photo, age, idRol});
 

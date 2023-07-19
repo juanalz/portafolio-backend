@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import generateJWT from '../helpers/generate-jwt';
 
-const login = async(req: Request, res: Response) => {
+export const login = async(req: Request, res: Response) => {
     const { email, password } = req.body;
     try {
         // Verificar si el email existe
@@ -38,7 +38,8 @@ const login = async(req: Request, res: Response) => {
          const token = await generateJWT(login.dataValues.id);
          console.log(token)
          return res.status(200).json({
-            token
+            token,
+            user: login
         });
         
     } catch (error) {
@@ -47,4 +48,29 @@ const login = async(req: Request, res: Response) => {
 
 }
 
-export default login;
+export const logout = async(req: Request, res: Response) => {
+
+    return res.status(200).json({
+        msg: 'El usuario cerró sesión correctamente.'
+    });
+}
+
+export const validateToken = async(req: Request, res: Response) => {
+
+    const { id } = req.body;
+    console.log('id', id);
+
+    const user = await User.findByPk(id);
+
+    if (!user) {
+        return res.status(200).json({
+            user,
+            msg: 'Usuario no existe.'
+        });
+    }
+
+    return res.status(200).json({
+        user,
+        msg: 'Validate Token.'
+    });
+}
